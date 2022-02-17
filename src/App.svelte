@@ -1,30 +1,32 @@
 <script lang="ts">
-	export let name: string;
+	import {S3Client, ListObjectsCommand} from '@aws-sdk/client-s3';
+	let accountName = '';
+	let accessKeyId = '';
+	let secretAccessKey = '';
+
+	async function handleSubmit() {
+		const client = new S3Client({ 
+			region: 'ap-northeast-2',
+			credentials: {
+				accessKeyId: accessKeyId,
+				secretAccessKey: secretAccessKey,
+			}
+		});
+
+
+		const command = new ListObjectsCommand({ Delimiter: "/", Bucket: 'bdbdbdleebucket' })
+		const response = await client.send(command);
+		console.log(response);
+	}
+	
 </script>
 
 <main>
-	<h1>Hello {name}!!!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<div><label for="account-name">Account Name: </label><input type="text" id="account-name" bind:value={accountName}/></div>
+	<div><label for="access-key-id">Access Key Id: </label><input type="text" id="access-key-id" bind:value={accessKeyId}/></div>	
+	<div><label for="secret-access-key">Secret Access Key: </label><input type="password" id="secret-access-key" bind:value={secretAccessKey}/></div>
+	<button on:click={handleSubmit}>connect</button>
 </main>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
 </style>
